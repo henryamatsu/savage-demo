@@ -16,9 +16,10 @@
   <ul class="messages">
   <% for(var i=0; i<messages.length; i++) {%>
     <li class="message">
+      <%= console.log(messages[i]); %>
       <span><%= messages[i].name %></span>
       <span><%= messages[i].msg %></span>
-      <span><%= messages[i].thumbUp %></span>
+      <span data-thumb-up=<%= messages[i].thumbUp %>><%= messages[i].thumbUp %></span>
       <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
       <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
       <span><i class="fa fa-trash" aria-hidden="true"></i></span>

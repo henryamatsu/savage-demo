@@ -31,18 +31,39 @@ app.get('/', (req, res) => {
 })
 
 app.post('/messages', (req, res) => {
-  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
+  const insertArr = [];
+  insertNum = 1;
+  for (let i = 0; i < insertNum; i++) {
+    insertArr.push({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0})
+  }
+
+  db.collection('messages').insertMany(insertArr, (err, result) => {
     if (err) return console.log(err)
     console.log('saved to database')
     res.redirect('/')
   })
 })
 
-app.put('/messages', (req, res) => {
+app.put('/thumbUp', (req, res) => {
   db.collection('messages')
   .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
     $set: {
-      thumbUp:req.body.thumbUp + 1
+      thumbUp:req.body.thumbUp + 1000000,
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+  })
+})
+
+app.put('/thumbDown', (req, res) => {
+  db.collection('messages')
+  .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+    $set: {
+      thumbUp:req.body.thumbUp - 1000000,
     }
   }, {
     sort: {_id: -1},
